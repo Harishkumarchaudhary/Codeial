@@ -11,8 +11,19 @@ module.exports.signUp = function(req, res) {
     })
 }
 
+//render sign in page
 module.exports.signIn = function(req, res) {
     return res.render('user_sign_in', {
         title: 'Codial | Sign In'
     })
+}
+
+//get the sign up data
+module.exports.create = function(req, res) {
+    //ToDo later
+}
+
+//sign in and create session for loggin in user
+module.exports.createSession = function(req, res) {
+    //ToDo later
 }
