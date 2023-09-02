@@ -77,6 +77,10 @@ module.exports.createSession = function(req, res) {
     }).catch((err)=>{
         console.log('error in finding user while signing in'); return;
     });
+}
 
-
+module.exports.signOut = function(req, res) {
+    //Clear the cookie 
+    res.clearCookie('user_id');
+    return res.redirect('/users/sign-in');
 }
