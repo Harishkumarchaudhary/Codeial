@@ -39,6 +39,7 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(passport.setAuthenticationUser)
 
 //Use express router
 app.use('/', require('./routes/index')); //We can simply state ./routes too that would automatically mean ./routes/index
