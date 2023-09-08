@@ -60,3 +60,9 @@ module.exports.createSession = function(req, res) {
     //ToDo later
     return res.redirect('/');
 }
+
+module.exports.destroySession = function(req, res) {
+    req.logout(function(err){
+        return res.redirect('/');
+    }); //this function is given to req by passport
+}
