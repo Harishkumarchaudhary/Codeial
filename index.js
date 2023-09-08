@@ -7,6 +7,7 @@ const expressLayouts = require('express-ejs-layouts');
 const session = require('express-session');
 const passport = require('passport');
 const passportLocal = require('./config/passport-local-strategy');
+const MongoStore = require('connect-mongo')(session); //Because it will store session info. Hence, passing session in args
 
 
 const app = express();
@@ -25,7 +26,7 @@ app.set('layout extractScripts', true);
 app.set('view engine', 'ejs');
 app.set('views', './views');
 
-
+//mongo store is used to store our session cookie in the db
 app.use(session({
     name: 'codial', //name of the cookie
     //ToDo change the secret before deployment in production mode
@@ -34,7 +35,16 @@ app.use(session({
     resave: false,
     cookie: {
       maxAge: (1000 * 60 * 100) //After 100 minutes, this session cookie should expire!
-    }
+    },
+    store: new MongoStore(
+     {
+       mongooseConnection: db,
+       autoRemove: 'disbaled'
+     },
+     function (err) {
+      console.log(err || 'connect mongo-db setup ok')
+     }
+    )
 }));
 
 app.use(passport.initialize());
