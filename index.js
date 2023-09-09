@@ -8,6 +8,15 @@ const session = require('express-session');
 const passport = require('passport');
 const passportLocal = require('./config/passport-local-strategy');
 const MongoStore = require('connect-mongo')(session); //Because it will store session info. Hence, passing session in args
+const sassMiddleware = require('node-sass-middleware');
+
+app.use(sassMiddleware({
+   src: '/assets/scss',  //from where style sheets needs to be picked
+   dest: '/assets/css',
+   debug: true, //if scss file not get compiled, we want to debug that easily
+   outputStyle: 'expanded', //we want output in multiple lines so that we can debug easily
+   prefix: '/css' //inside assets folder look out for css folder
+}));
 
 
 const app = express();
