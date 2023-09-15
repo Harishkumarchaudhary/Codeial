@@ -16,7 +16,16 @@ module.exports.home = function(req, res) {
 
 
     //populating whole user instead of just id
-    Post.find({}).populate('user').exec().then((posts)=>{
+    Post.find({})
+    .populate('user')
+    .populate({
+        path: 'comments',
+        populate: {
+           path: 'user'
+        }
+    })
+    .exec()
+    .then((posts)=>{
         return res.render('home', {
             title: "Home",
             posts: posts
