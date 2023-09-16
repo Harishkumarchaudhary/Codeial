@@ -18,7 +18,7 @@ module.exports.destroy = function(req, res) {
       //Only user who has written that post should be able to delete it
       //.id means converting the object id into string
       if (post.user == req.user.id) {
-         Post. findByIdAndDelete(req.params.id).then((post)=>{
+         Post.findByIdAndDelete(req.params.id).then((post)=>{
           Comment.deleteMany({post: req.params.id}).then(()=>{
             console.log('Succesfully deleted post along with comments');
             return res.redirect('back');
