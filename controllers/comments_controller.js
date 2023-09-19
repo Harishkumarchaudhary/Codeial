@@ -11,7 +11,15 @@ module.exports.create = function(req, res) {
             }).then((comment)=>{
                 post.comments.push(comment);
                 post.save(); //save is called whenever we updates something
-                console.log('post is updated')
+                console.log('post is updated');
+                if (req.xhr) {
+                    return res.status(200).json({
+                        data: {
+                          comment: comment
+                        },
+                        message: "Comment Added!"
+                    });
+                }
                 return res.redirect('/');
             }).catch((err)=>{
                 return res.redirect('/');
@@ -31,6 +39,14 @@ module.exports.destroy = function(req, res) {
              Comment.findByIdAndDelete(req.params.id).then((comment)=>{
                 Post.findByIdAndUpdate(postId, {$pull: {comments: req.params.id}})
                 .then((post)=>{
+                    if (req.xhr) {
+                        return res.status(200).json({
+                            data: {
+                              comment_id: req.params.id
+                            },
+                            message: "Comment Added!"
+                        });
+                    }
                     return res.redirect('back');
                 })
                 .catch((err)=>{

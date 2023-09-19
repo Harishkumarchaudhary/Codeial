@@ -37,7 +37,7 @@
          </small>
          <div class="post-comments">
              
-                 <form action="/comments/create" method="POST">
+                 <form action="/comments/create" method="POST" id="new-comment-form">
                      <input type="text" name="content" placeholder="Type here to add comment..." required>
                      <input type="hidden" name="post" value="${post._id }">
                      <input type="submit" value="Add Comment">
@@ -47,7 +47,7 @@
      
          <div class="post-comments-list">
              <ul id="post-comments-${post._id}">
-                 
+                
              </ul>
          </div>
      
