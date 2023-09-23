@@ -1,6 +1,19 @@
 const Comment = require('../models/comment');
 const Post = require('../models/post')
 
+async function populateUser(comment, res) {
+    let updatedComment =  await comment.populate({
+        path: 'user',
+        select: '-password -email'
+    });
+    return res.status(200).json({
+        data: {
+           comment: updatedComment
+        },
+        message: "Comment Added!"
+    });
+}
+
 module.exports.create = function(req, res) {
     Post.findById(req.body.post).then((post)=>{
         if (post) {
@@ -13,14 +26,10 @@ module.exports.create = function(req, res) {
                 post.save(); //save is called whenever we updates something
                 console.log('post is updated');
                 if (req.xhr) {
-                    return res.status(200).json({
-                        data: {
-                          comment: comment
-                        },
-                        message: "Comment Added!"
-                    });
+                   populateUser(comment, res);
+                } else {
+                   return res.redirect('/');
                 }
-                return res.redirect('/');
             }).catch((err)=>{
                 return res.redirect('/');
             });
@@ -30,6 +39,24 @@ module.exports.create = function(req, res) {
     });
 }
 
+module.exports.getAll = function(req, res) {
+    Comment.find({})
+    .populate({
+        path: 'user',
+        select: '-password -email'
+    }).then((comments)=>{
+        if (req.xhr) {
+            return res.status(200).json({
+                data: {
+                    comments: comments
+                },
+                message: "Comments Fetched!"
+            });
+        } else {
+            return res.redirect('/');
+        }
+    })
+}
 
 module.exports.destroy = function(req, res) {
     Comment.findById(req.params.id)
@@ -44,7 +71,7 @@ module.exports.destroy = function(req, res) {
                             data: {
                               comment_id: req.params.id
                             },
-                            message: "Comment Added!"
+                            message: "Comment Deleted!"
                         });
                     }
                     return res.redirect('back');
