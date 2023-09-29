@@ -40,11 +40,11 @@ module.exports.update = async function(req, res) {
 
                  if (req.file) {
                      
-                    if (user.avatar) {
-                        //delete the avatar
-                        fs.unlinkSync(path.join(__dirname  , '..', user.avatar));
+                    // check if an avatar exists for the user or not! if yes, delete it!
+                    if (user.avatar &&fs.existsSync(path.join(__dirname, '..', user.avatar))) {
+                            //delete the avatar
+                            fs.unlinkSync(path.join(__dirname  , '..', user.avatar));
                     }
-
                     //saving the path of uploaded file into the avatar field of the user
                     user.avatar = User.avatarPath + '/' + req.file.filename;
                     user.save();
