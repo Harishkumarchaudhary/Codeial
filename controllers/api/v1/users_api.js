@@ -15,7 +15,7 @@ module.exports.createSession = async function(req, res) {
      return res.json(200, {
         message: 'Signed In Successfully, here is your token, please keep it safe',
         data: {
-            token: JWT.sign(user.toJSON(), 'codial', {expiresIn: 10000})
+            token: JWT.sign(user.toJSON(), 'codial', {expiresIn: 100000})
         }
      })
    } catch(err) {
