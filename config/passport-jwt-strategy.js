@@ -15,7 +15,7 @@ passport.use(new JWTStrategy(opts, function(jwtPayload, done){
 
     User.findById(jwtPayload._id).then((user)=>{
         if (user) {
-            return done(null, user);
+            return done(null, user); //this user is set in req by passport : very important
         } else {
             return done(null, false); //user not found
         }
