@@ -1,11 +1,13 @@
 const Comment = require('../models/comment');
-const Post = require('../models/post')
+const Post = require('../models/post');
+const commentsMailer = require('../mailers/comments_mailer');
 
 async function populateUser(comment, res) {
     let updatedComment =  await comment.populate({
         path: 'user',
-        select: '-password -email'
+        select: '-password'
     });
+    commentsMailer.newComment(updatedComment);
     return res.status(200).json({
         data: {
            comment: updatedComment
