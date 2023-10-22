@@ -1,13 +1,19 @@
 const Comment = require('../models/comment');
 const Post = require('../models/post');
 const commentsMailer = require('../mailers/comments_mailer');
+const queue = require('../config/kue');
+const commentEmailWorker = require('../workers/comment_email_worker');
 
 async function populateUser(comment, res) {
     let updatedComment =  await comment.populate({
         path: 'user',
         select: '-password'
     });
-    commentsMailer.newComment(updatedComment);
+    //commentsMailer.newComment(updatedComment);
+    let job = queue.create('emails', updatedComment).save(function (err) {
+        if (err) {console.log('error in creating the queue'); return; }
+        console.log('job enqueued ', job.id);
+    });
     return res.status(200).json({
         data: {
            comment: updatedComment
