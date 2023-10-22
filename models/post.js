@@ -16,6 +16,12 @@ const postSchema = mongoose.Schema({
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Comment' //refer to Comment schema
         }
+      ],
+      likes: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Like' //refer to Likes schema
+        }
       ]
 }, {
         timestamps: true //This field will create createdAt and updatedAt in db. Mongoose does it for us
