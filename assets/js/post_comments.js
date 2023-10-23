@@ -13,10 +13,42 @@
                  $('#post-comments-' + data.data.comment.post).prepend(newComment);
                  console.log($(' .delete-comment-btn', newComment));
                  deleteComment($(' .delete-comment-btn', newComment));
+
+                 //enable the functionality of the toggle like button on new post
+                 toggleLike($(' .toggle-like-button', newComment));
             }, error: function(err) {
                  console.log(err.responseText);
             }
           })
+        });
+    }
+
+    let toggleLike = function(anchorTag) {
+        $(anchorTag).click(function(e){
+            e.preventDefault();
+    
+            console.log('url for like-toggle: ', $(anchorTag).attr('href'));
+                $.ajax({
+                    type: 'POST',
+                    url: $(anchorTag).attr('href'),
+                })
+                .done(function(data) {
+                    let likesCount = parseInt($(anchorTag).attr('data-likes'));
+                    console.log(likesCount);
+                    if (data.data.deleted == true){
+                        likesCount -= 1;
+                        
+                    }else{
+                        likesCount += 1;
+                    }
+    
+                    $(anchorTag).attr('data-likes', likesCount);
+                    $(anchorTag).html(`${likesCount} Likes`);
+    
+                })
+                .fail(function(errData) {
+                    console.log('error in completing the request');
+                });
         });
     }
 
@@ -31,6 +63,18 @@
             <small>
             ${comment.user.name}
             </small>
+
+            <br>
+            <br>
+            <small>
+             <a class = "toggle-like-button" data-likes="0" href="/likes/toggle/?id=${comment._id}&type=Comment">
+             0 likes
+             </a>
+             </small>
+             <br>
+             <br>
+
+
             </li>
         `);
     }
@@ -64,6 +108,7 @@
                  for (comment of comments) {
                     let newComment = newCommentDom(comment);
                     $('#post-comments-' + comment.post).prepend(newComment);
+                    toggleLike($(' .toggle-like-button', newComment));
                     console.log($(' .delete-comment-btn', newComment));
                     deleteComment($(' .delete-comment-btn', newComment));
                  }

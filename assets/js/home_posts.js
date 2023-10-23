@@ -14,10 +14,63 @@
                  let newPost = newPostDom(data.data.post);
                  $("#posts-list-container>ul").prepend(newPost);
                  deletePost($(' .delete-post-button', newPost)); //the class is inside newPost object
+
+                 //enable the functionality of the toggle like button on new post
+                 toggleLike($(' .toggle-like-button', newPost));
             }, error: function(err) {
                  console.log(err.responseText);
             }
           })
+        });
+    }
+
+    let fetchAllPosts = function () {
+        $.ajax({
+            url: '/posts/all',
+            type: 'get',
+            success: function(data) {
+                 console.log(data);
+                 let posts = data.data.posts;
+                 for (post of posts) {
+                    let newPost = newPostDom(data.data.post);
+                    $("#posts-list-container>ul").prepend(newPost);
+                    deletePost($(' .delete-post-button', newPost)); //the class is inside newPost object
+   
+                    //enable the functionality of the toggle like button on new post
+                    toggleLike($(' .toggle-like-button', newPost));
+                 }
+            }, error: function(err) {
+                 console.log(err.responseText);
+            }
+          });
+    }
+
+    let toggleLike = function(anchorTag) {
+        $(anchorTag).click(function(e){
+            e.preventDefault();
+    
+            console.log('url for like-toggle: ', $(anchorTag).attr('href'));
+                $.ajax({
+                    type: 'POST',
+                    url: $(anchorTag).attr('href'),
+                })
+                .done(function(data) {
+                    let likesCount = parseInt($(anchorTag).attr('data-likes'));
+                    console.log(likesCount);
+                    if (data.data.deleted == true){
+                        likesCount -= 1;
+                        
+                    }else{
+                        likesCount += 1;
+                    }
+    
+                    $(anchorTag).attr('data-likes', likesCount);
+                    $(anchorTag).html(`${likesCount} Likes`);
+    
+                })
+                .fail(function(errData) {
+                    console.log('error in completing the request');
+                });
         });
     }
 
@@ -35,6 +88,18 @@
          <small>
          ${ post.user.name }
          </small>
+
+         <br>
+         <br>
+         <small>
+             <a class = "toggle-like-button" data-likes="0" href= "/likes/toggle/?id=${post._id}&type=Post">
+             0 likes
+             </a>
+         </small>
+         <br>
+         <br>
+         
+
          <div class="post-comments">
              
                  <form action="/comments/create" method="POST" id="new-comment-form">
@@ -76,4 +141,5 @@
 
 
     createPost();
+    fetchAllPosts();
 }

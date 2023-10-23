@@ -4,6 +4,6 @@ const passport = require('passport');
 
 const likeController = require('../controllers/likes_controller');
 
-router.post('/toggle', likeController.toogleLike);
+router.post('/toggle', likeController.toggleLike);
 
 module.exports = router;
