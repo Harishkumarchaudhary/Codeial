@@ -31,14 +31,23 @@ module.exports.home = async function(req, res) {
             }
         }).populate('likes');
     
-        let users = await User.find({});
+        let users = await User.find({}).populate({
+           path: 'friendships',
+           populate: {
+            path: 'from_user'
+           },
+           populate: {
+            path: 'to_user'
+           }
+        });
+
         return res.render('home', {
                     title: "Home",
                     posts: posts,
                     all_users: users
         });
     } catch (err) {
-        console.log('Error', err);
+        console.log('Error in rendering Homw View', err);
         return;
     }
 }
