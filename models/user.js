@@ -21,7 +21,13 @@ const userSchema = mongoose.Schema({
       },
       avatar: {
         type: String
-      }
+      },
+      friendships: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Friendship'
+        }
+      ]
 }, {
         timestamps: true //This field will create createdAt and updatedAt in db. Mongoose does it for us
 });
