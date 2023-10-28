@@ -9,6 +9,13 @@ const passport = require('passport');
 const passportLocal = require('./config/passport-local-strategy');
 const passportJWT = require('./config/passport-jwt-strategy');
 const passportGoogle = require('./config/passport-google-oauth2-strategy');
+
+//set up chat server to be used with socket.io
+const chatServer = require('htpp').Server(app);
+const chatSockets = require('./config/chats_socket').chatSockets(chatServer);
+chatServer.listen(5000);
+console.log('Chat server is listening on port 5000');
+
 const MongoStore = require('connect-mongo')(session); //Because it will store session info. Hence, passing session in args
 const sassMiddleware = require('node-sass-middleware');
 const flash = require('connect-flash');
