@@ -2,6 +2,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const port = 8000;
 const db = require('./config/mongoose');
+const env =require('./config/environment');
 const expressLayouts = require('express-ejs-layouts');
 //used for session cookie
 const session = require('express-session');
@@ -25,9 +26,11 @@ const chatSockets = require('./config/chats_socket').chatSockets(chatServer);
 chatServer.listen(5000);
 console.log('Chat server is listening on port 5000');
 
+const path = require('path');
+
 app.use(sassMiddleware({
-   src: './assets/scss',  //from where style sheets needs to be picked
-   dest: './assets/css',
+   src: path.join(__dirname, env.asset_path, 'scss'),  //from where style sheets needs to be picked
+   dest: path.join(__dirname, env.asset_path, 'css'),
    debug: true, //if scss file not get compiled, we want to debug that easily
    outputStyle: 'expanded', //we want output in multiple lines so that we can debug easily
    prefix: '/css' //inside assets folder look out for css folder
@@ -35,7 +38,7 @@ app.use(sassMiddleware({
 app.use(express.urlencoded());
 app.use(cookieParser());
 
-app.use(express.static('./assets'));
+app.use(express.static(env.asset_path));
 //make uploads path available to browser
 app.use('/uploads', express.static(__dirname + '/uploads'));
 
@@ -53,7 +56,7 @@ app.set('views', './views');
 app.use(session({
     name: 'codial', //name of the cookie
     //ToDo change the secret before deployment in production mode
-    secret: 'blahsomething',
+    secret: env.session_cookie_key,
     saveUninitialized: false,
     resave: false,
     cookie: {
