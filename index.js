@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 const port = 8000;
 const db = require('./config/mongoose');
 const env =require('./config/environment');
+const logger = require('morgan');
 const expressLayouts = require('express-ejs-layouts');
 //used for session cookie
 const session = require('express-session');
@@ -28,13 +29,16 @@ console.log('Chat server is listening on port 5000');
 
 const path = require('path');
 
-app.use(sassMiddleware({
-   src: path.join(__dirname, env.asset_path, 'scss'),  //from where style sheets needs to be picked
-   dest: path.join(__dirname, env.asset_path, 'css'),
-   debug: true, //if scss file not get compiled, we want to debug that easily
-   outputStyle: 'expanded', //we want output in multiple lines so that we can debug easily
-   prefix: '/css' //inside assets folder look out for css folder
-}));
+if (env.name == 'development') {
+   app.use(sassMiddleware({
+      src: path.join(__dirname, env.asset_path, 'scss'),  //from where style sheets needs to be picked
+      dest: path.join(__dirname, env.asset_path, 'css'),
+      debug: true, //if scss file not get compiled, we want to debug that easily
+      outputStyle: 'expanded', //we want output in multiple lines so that we can debug easily
+      prefix: '/css' //inside assets folder look out for css folder
+   }));
+}
+
 app.use(express.urlencoded());
 app.use(cookieParser());
 
@@ -43,6 +47,7 @@ app.use(express.static(env.asset_path));
 app.use('/uploads', express.static(__dirname + '/uploads'));
 
 app.use(expressLayouts);
+app.use(logger(env.morgan.mode, env.morgan.options));
 
 
 //Extract style and scripts from subpages into the layout
