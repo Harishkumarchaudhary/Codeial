@@ -1,0 +1,1 @@
+(async function(){let t=$("#toggle-friendship-button");const e=t.attr("data-profile");$.ajax({type:"GET",url:"/friendships/getstatus/?friend_id="+e}).done((function(e){1==e.data.friendExist?t.html("Remove Friend"):t.html("Add Friend")})).fail((function(t){console.log("error in completing the request",t)}))})();
