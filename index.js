@@ -19,6 +19,7 @@ const customMWare = require('./config/middleware');
 
 
 const app = express();
+require('./config/view_helpers')(app);
 
 
 //set up chat server to be used with socket.io
